@@ -7,14 +7,14 @@
     <title>Artigo | DetecTI Security</title>
     <!-- Font Awesome 6 (Free) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Google Fonts - Inter -->
+    <!-- Google Fonts - Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
         rel="stylesheet">
     <!-- Animate.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
-    <!-- CSS do site - CAMINHO CORRETO PARA A RAIZ -->
-    <link rel="stylesheet" href="/assets/css/style.css">
     <!-- Marked.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.0.0/marked.min.js"></script>
     <!-- Prism.js para syntax highlighting -->
@@ -25,68 +25,300 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
 
     <style>
+        :root {
+            --bg-primary: #0D0E12;
+            --bg-secondary: #14151D;
+            --bg-card: #191B26;
+            --bg-card-hover: #1F2230;
+            --purple-electric: #8A2BE2;
+            --purple-primary: #7C3AED;
+            --purple-glow: rgba(138, 43, 226, 0.25);
+            --cyan-accent: #00e5ff;
+            --cyan-glow: rgba(0, 229, 255, 0.2);
+            --text-primary: #F3F4F6;
+            --text-secondary: #9CA3AF;
+            --text-muted: #6B7280;
+            --border-color: rgba(138, 43, 226, 0.18);
+            --border-cyan: rgba(0, 229, 255, 0.25);
+            --code-bg: #090A0D;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace, Consolas, Courier;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Tema Claro */
+        body.light-theme {
+            --bg-primary: #F8FAFD;
+            --bg-secondary: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --bg-card-hover: #F1F4F9;
+            --text-primary: #0D0E12;
+            --text-secondary: #4B5563;
+            --text-muted: #6B7280;
+            --border-color: rgba(124, 58, 237, 0.15);
+            --code-bg: #1A1C23;
+        }
+
+        body.light-theme .navbar {
+            background: rgba(248, 250, 253, 0.9);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.12);
+        }
+
+        body.light-theme .footer {
+            background: #0E1017;
+            color: #E0E0E0;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(13, 14, 18, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 0;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .navbar-logo img {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .navbar-logo span {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .navbar-logo span .ti-highlight {
+            color: var(--purple-electric);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14.5px;
+            transition: color 0.2s ease;
+            position: relative;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--purple-electric);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--purple-electric);
+            transition: width 0.2s ease;
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 100%;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .nav-social {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-social a {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-social a:hover {
+            background: var(--purple-electric);
+            color: #FFFFFF;
+            border-color: var(--purple-electric);
+            transform: translateY(-2px);
+        }
+
+        .theme-toggle {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--purple-electric);
+            color: #FFFFFF;
+            border-color: var(--purple-electric);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content Container */
+        .main-content {
+            margin-top: 75px;
+            padding: 50px 0 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* ===== POST STYLES ===== */
         .post-header {
-            padding: 40px 0 30px;
-            border-bottom: 1px solid rgba(140, 82, 255, 0.15);
+            padding: 20px 0 30px;
+            border-bottom: 1px solid var(--border-color);
             margin-bottom: 40px;
         }
 
         .post-header .post-tags {
             margin: 16px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .post-header .post-tags .tag {
-            font-size: 12px;
-            padding: 4px 12px;
+            padding: 4px 10px;
+            background: rgba(138, 43, 226, 0.12);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            font-weight: 600;
+            color: var(--purple-electric);
+            text-transform: uppercase;
         }
 
         .post-header .post-meta {
-            color: #b0b0c0;
-            font-size: 14px;
+            color: var(--text-muted);
+            font-size: 13px;
             display: flex;
             gap: 24px;
             flex-wrap: wrap;
+            font-family: var(--font-mono);
         }
 
         .post-header .post-meta i {
-            color: #8C52FF;
+            color: var(--purple-electric);
             margin-right: 6px;
         }
 
         .post-content {
-            max-width: 850px;
+            max-width: 860px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 10px;
         }
 
         .post-content h1,
         .post-content h2,
         .post-content h3 {
-            color: #ffffff;
-            margin: 32px 0 16px;
+            color: var(--text-primary);
+            margin: 36px 0 18px;
+            letter-spacing: -0.3px;
         }
 
         .post-content h1 {
-            font-size: 32px;
+            font-size: clamp(26px, 5vw, 36px);
+            font-weight: 800;
         }
         .post-content h2 {
-            font-size: 26px;
+            font-size: clamp(22px, 4vw, 28px);
+            font-weight: 700;
         }
         .post-content h3 {
             font-size: 20px;
+            font-weight: 700;
         }
 
         .post-content p {
-            color: #c8c8d0;
-            font-size: 17px;
+            color: #d1d5db;
+            font-size: 16.5px;
             line-height: 1.8;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         .post-content ul,
         .post-content ol {
-            color: #c8c8d0;
-            margin: 16px 0 20px 24px;
+            color: #d1d5db;
+            margin: 16px 0 24px 24px;
+            line-height: 1.7;
         }
 
         .post-content li {
@@ -94,80 +326,84 @@
         }
 
         .post-content pre {
-            background: #1a1a24;
+            background: var(--code-bg);
             border-radius: 12px;
             padding: 20px;
-            margin: 24px 0;
+            margin: 26px 0;
             overflow-x: auto;
-            border: 1px solid rgba(140, 82, 255, 0.15);
+            border: 1px solid var(--border-color);
         }
 
         .post-content code {
-            font-family: 'Fira Code', monospace;
+            font-family: var(--font-mono);
             font-size: 14px;
         }
 
         .post-content blockquote {
-            border-left: 4px solid #8C52FF;
+            border-left: 4px solid var(--purple-electric);
             padding: 16px 24px;
-            background: rgba(140, 82, 255, 0.05);
+            background: rgba(138, 43, 226, 0.06);
             border-radius: 0 12px 12px 0;
             margin: 24px 0;
-            color: #b0b0c0;
+            color: var(--text-secondary);
+            font-style: italic;
         }
 
         .post-content img {
             max-width: 100%;
             border-radius: 12px;
-            margin: 24px 0;
-            border: 1px solid rgba(140, 82, 255, 0.1);
+            margin: 26px 0;
+            border: 1px solid var(--border-color);
         }
 
         .post-content .back-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: #8C52FF;
+            color: var(--purple-electric);
             text-decoration: none;
             font-weight: 600;
+            font-size: 14px;
+            font-family: var(--font-mono);
             margin-top: 40px;
             padding: 12px 24px;
-            border: 1px solid rgba(140, 82, 255, 0.2);
-            border-radius: 30px;
-            transition: all 0.3s;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            transition: all 0.25s ease;
         }
 
         .post-content .back-link:hover {
-            background: rgba(140, 82, 255, 0.1);
+            background: rgba(138, 43, 226, 0.12);
+            border-color: var(--purple-electric);
             transform: translateX(-4px);
         }
 
         .post-loading {
             text-align: center;
             padding: 80px 0;
-            color: #b0b0c0;
+            color: var(--text-secondary);
         }
 
         .post-loading i {
             font-size: 48px;
-            color: #8C52FF;
+            color: var(--purple-electric);
             margin-bottom: 16px;
         }
 
         .post-error {
             text-align: center;
             padding: 80px 0;
-            color: #b0b0c0;
+            color: var(--text-secondary);
         }
 
         .post-error i {
             font-size: 48px;
-            color: #ff6b6b;
+            color: #ef4444;
             margin-bottom: 16px;
         }
 
         .post-error a {
-            color: #8C52FF;
+            color: var(--purple-electric);
             text-decoration: none;
         }
 
@@ -175,43 +411,178 @@
         body.light-theme .post-content h1,
         body.light-theme .post-content h2,
         body.light-theme .post-content h3 {
-            color: #0C184B;
+            color: #0D0E12;
         }
 
         body.light-theme .post-content p,
         body.light-theme .post-content ul,
         body.light-theme .post-content ol {
-            color: #5E667B;
+            color: #4B5563;
         }
 
         body.light-theme .post-content pre {
-            background: #f0f0f5;
+            background: #1A1C23;
         }
 
         body.light-theme .post-content blockquote {
-            background: rgba(140, 82, 255, 0.03);
+            background: rgba(124, 58, 237, 0.05);
+            color: #4B5563;
         }
 
         body.light-theme .post-header .post-meta {
-            color: #5E667B;
+            color: #6B7280;
+        }
+
+        /* 6. Footer */
+        .footer {
+            background: #090A0E;
+            padding: 60px 0 25px;
+            color: #FFFFFF;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-cta-box {
+            text-align: center;
+            padding-bottom: 45px;
+            margin-bottom: 45px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .footer-cta-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #FFFFFF;
+            margin-bottom: 10px;
+        }
+
+        .footer-cta-title span {
+            color: var(--purple-electric);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 45px;
+            margin-bottom: 40px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .footer-logo img {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .footer-logo span {
+            font-size: 20px;
+            font-weight: 700;
+            color: #FFFFFF;
+        }
+
+        .footer-about-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 320px;
+        }
+
+        .footer-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #FFFFFF;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: var(--font-mono);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--purple-electric);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 25px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* ===== RESPONSIVIDADE ===== */
+        @media (max-width: 1024px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 35px;
+            }
+
+            .navbar-container {
+                flex-direction: column;
+                gap: 14px;
+            }
+
+            .main-content {
+                margin-top: 130px;
+            }
         }
 
         @media (max-width: 768px) {
             .post-content {
-                padding: 0 16px;
-            }
-            .post-content h1 {
-                font-size: 26px;
-            }
-            .post-content h2 {
-                font-size: 22px;
-            }
-            .post-content p {
-                font-size: 15px;
+                padding: 0;
             }
             .post-header .post-meta {
                 gap: 12px;
-                font-size: 13px;
+                font-size: 12.5px;
+            }
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 14px 20px;
+            }
+            .nav-menu a {
+                font-size: 14px;
+            }
+            .footer-cta-title {
+                font-size: 22px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 16px;
+            }
+            .navbar-container {
+                padding: 0 16px;
+            }
+            .navbar-logo span {
+                font-size: 18px;
+            }
+            .nav-menu {
+                gap: 10px 16px;
+            }
+            .nav-menu a {
+                font-size: 13.5px;
             }
         }
     </style>
@@ -221,26 +592,30 @@
     <!-- Navbar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <div class="navbar-logo">
+            <a href="/" class="navbar-logo">
                 <img src="https://avatars.githubusercontent.com/u/129181562" alt="DetecTI">
                 <span>Detec<span class="ti-highlight">TI</span> Security</span>
-            </div>
+            </a>
 
             <ul class="nav-menu">
                 <li><a href="/#home">Início</a></li>
-                <li><a href="/#conteudo">Conteúdo</a></li>
+                <li><a href="/#ecossistema">Ecossistema</a></li>
                 <li><a href="/#sobre">Sobre</a></li>
+                <li><a href="/#pesquisas">Pesquisas</a></li>
                 <li><a href="/blog/">Blog</a></li>
-                <li><a href="/#comunidade">Comunidade</a></li>
+                <li><a href="/#onde-encontrar">Conectar</a></li>
             </ul>
 
             <div class="nav-actions">
                 <div class="nav-social">
-                    <a href="https://instagram.com/detectisec" target="_blank" title="Instagram">
-                        <i class="fa-brands fa-instagram"></i>
-                    </a>
                     <a href="https://github.com/detectisec" target="_blank" title="GitHub">
                         <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/company/detectisec" target="_blank" title="LinkedIn">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </a>
+                    <a href="https://instagram.com/detectisec" target="_blank" title="Instagram">
+                        <i class="fa-brands fa-instagram"></i>
                     </a>
                     <a href="https://www.youtube.com/@detectisec" target="_blank" title="YouTube">
                         <i class="fa-brands fa-youtube"></i>
@@ -269,36 +644,45 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
+            <div class="footer-cta-box">
+                <h3 class="footer-cta-title">Detecte Fraquezas e <span>Proteja o que importa!</span></h3>
+                <p style="color: var(--text-secondary); font-size: 15px;">Segurança ofensiva, engenharia de detecção e análise contínua de superfície de ataque.</p>
+            </div>
+
             <div class="footer-grid">
-                <div class="footer-logo">
-                    <img src="https://avatars.githubusercontent.com/u/129181562" alt="DetecTI">
-                    <p>Detectar fraquezas, proteger o que importa. Conhecimento em segurança digital para todos.</p>
+                <div>
+                    <div class="footer-logo">
+                        <img src="https://avatars.githubusercontent.com/u/129181562" alt="DetecTI">
+                        <span>Detec<span style="color: var(--purple-electric);">TI</span> Security</span>
+                    </div>
+                    <p class="footer-about-text">
+                        Hub técnico de Pesquisa de Superfície de Ataque, Engenharia de Detecção e Segurança Ofensiva.
+                    </p>
                 </div>
 
                 <div>
-                    <h4 class="footer-title">Conteúdo</h4>
+                    <h4 class="footer-title">Ecossistema</h4>
                     <ul class="footer-links">
-                        <li><a href="#">Fundamentos de Pentest</a></li>
-                        <li><a href="#">Ferramentas e Exploração</a></li>
-                        <li><a href="#">Análise de Malware</a></li>
-                        <li><a href="#">Engenharia Social</a></li>
-                        <li><a href="#">Privacidade na Prática</a></li>
+                        <li><a href="/#ecossistema">Método R.A.D.A.R</a></li>
+                        <li><a href="/#ecossistema">DetecTI-CLI</a></li>
+                        <li><a href="/#pesquisas">Pesquisas & P&D</a></li>
+                        <li><a href="/blog/">Blog Técnico</a></li>
                     </ul>
                 </div>
 
                 <div>
-                    <h4 class="footer-title">Legal</h4>
+                    <h4 class="footer-title">Institucional & Legal</h4>
                     <ul class="footer-links">
+                        <li><a href="/#sobre">Sobre a DetecTI</a></li>
                         <li><a href="#">Política de Privacidade</a></li>
                         <li><a href="#">Termos de Uso</a></li>
-                        <li><a href="#">LGPD</a></li>
-                        <li><a href="#">Código de Ética</a></li>
+                        <li><a href="https://github.com/detectisec" target="_blank">Projetos Open Source</a></li>
                     </ul>
                 </div>
             </div>
 
             <div class="footer-bottom">
-                <p>© 2026 DetecTI Security. Todos os direitos reservados. Conteúdo e Pesquisa em Segurança Digital.</p>
+                <p>© 2026 DetecTI Security. Todos os direitos reservados. Hub Técnico de Segurança Ofensiva & Engenharia de Detecção.</p>
             </div>
         </div>
     </footer>

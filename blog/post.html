@@ -900,25 +900,27 @@
         // ============================================================
         async function loadPost() {
             const urlParams = new URLSearchParams(window.location.search);
-            const slug = urlParams.get('slug');
+            const rawSlug = urlParams.get('slug');
             const container = document.getElementById('post-container');
 
-            if (!slug) {
+            if (!rawSlug) {
                 window.location.href = '/blog/';
                 return;
             }
 
+            const slug = decodeURIComponent(rawSlug);
+
             try {
-                const indexResponse = await fetch('/_posts/index.json');
+                const indexResponse = await fetch('_post/index.json');
                 if (!indexResponse.ok) throw new Error('index.json não encontrado');
                 const posts = await indexResponse.json();
 
-                const postMeta = posts.find(p => p.slug === slug);
+                const postMeta = posts.find(p => p.slug === slug || decodeURIComponent(p.slug) === slug);
                 if (!postMeta) throw new Error('Post não encontrado no índice');
 
                 document.title = `${postMeta.title} | DetecTI Security Blog`;
 
-                const mdResponse = await fetch(`/_posts/${slug}.md`);
+                const mdResponse = await fetch(`_post/${postMeta.slug}.md`);
                 if (!mdResponse.ok) throw new Error('Arquivo .md não encontrado');
                 const markdown = await mdResponse.text();
 

@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DetecTI-CLI Documentation | DetecTI Security</title>
+    <meta name="description" content="Official technical documentation for DetecTI-CLI - High-performance asynchronous engine for External Attack Surface Management (EASM), Reconnaissance, and Threat Intelligence.">
+    <link rel="icon" type="image/png" href="/assets/images/favicon.png">
+
+    <!-- Font Awesome 6 (Free) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts - Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Prism.js Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
+
+    <!-- Mermaid.js for Diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #0D0E12;
+            --bg-secondary: #14151D;
+            --bg-card: #191B26;
+            --bg-card-hover: #1F2230;
+            --bg-sidebar: #101119;
+            --sidebar-border: rgba(138, 43, 226, 0.15);
+            --purple-electric: #8A2BE2;
+            --purple-primary: #7C3AED;
+            --purple-glow: rgba(138, 43, 226, 0.25);
+            --cyan-accent: #00e5ff;
+            --cyan-glow: rgba(0, 229, 255, 0.2);
+            --text-primary: #F3F4F6;
+            --text-secondary: #9CA3AF;
+            --text-muted: #6B7280;
+            --border-color: rgba(138, 43, 226, 0.18);
+            --border-cyan: rgba(0, 229, 255, 0.25);
+            --code-bg: #07080B;
+            --font-main: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace, Consolas, Courier;
+            
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --info-color: #3b82f6;
+
+            --sidebar-width: 290px;
+            --toc-width: 230px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.65;
+            overflow-x: hidden;
+        }
+
+        /* Light Theme */
+        body.light-theme {
+            --bg-primary: #F8FAFD;
+            --bg-secondary: #FFFFFF;
+            --bg-card: #FFFFFF;
+            --bg-card-hover: #F1F4F9;
+            --bg-sidebar: #F3F6FA;
+            --sidebar-border: rgba(124, 58, 237, 0.12);
+            --text-primary: #0D0E12;
+            --text-secondary: #4B5563;
+            --text-muted: #6B7280;
+            --border-color: rgba(124, 58, 237, 0.15);
+            --border-cyan: rgba(0, 160, 220, 0.35);
+            --code-bg: #151821;
+        }
+
+        /* Global Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 68px;
+            background: rgba(13, 14, 18, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 1000;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        body.light-theme .navbar {
+            background: rgba(248, 250, 253, 0.92);
+        }
+
+        .navbar-container {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .sidebar-toggle-btn {
+            display: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .navbar-logo img {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+
+        .navbar-logo span {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .navbar-logo span .ti-highlight {
+            color: var(--purple-electric);
+        }
+
+        .doc-badge {
+            background: rgba(0, 229, 255, 0.12);
+            color: var(--cyan-accent);
+            border: 1px solid var(--border-cyan);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 24px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s ease;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--cyan-accent);
+        }
+
+        /* Nav Dropdown */
+        .nav-dropdown {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14px;
+            transition: color 0.2s ease;
+            position: relative;
+            background: none;
+            border: none;
+            font-family: inherit;
+            padding: 0;
+        }
+
+        .nav-dropdown-toggle i.fa-chevron-down {
+            font-size: 11px;
+            transition: transform 0.25s ease;
+        }
+
+        .nav-dropdown:hover .nav-dropdown-toggle,
+        .nav-dropdown.active .nav-dropdown-toggle {
+            color: var(--cyan-accent);
+        }
+
+        .nav-dropdown:hover .nav-dropdown-toggle i.fa-chevron-down,
+        .nav-dropdown.open .nav-dropdown-toggle i.fa-chevron-down {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 14px);
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 8px;
+            min-width: 260px;
+            box-shadow: 0 14px 35px rgba(0, 0, 0, 0.6);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            list-style: none;
+            z-index: 1010;
+        }
+
+        .nav-dropdown:hover .dropdown-menu,
+        .nav-dropdown.open .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -14px;
+            left: 0;
+            width: 100%;
+            height: 14px;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--cyan-accent);
+        }
+
+        .dropdown-item-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            background: rgba(0, 229, 255, 0.1);
+            border: 1px solid var(--border-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--cyan-accent);
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .dropdown-item:hover .dropdown-item-icon {
+            background: var(--cyan-accent);
+            color: #0b0f19;
+            border-color: var(--cyan-accent);
+        }
+
+        .dropdown-item-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dropdown-item-title {
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .dropdown-item-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .btn-repo {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 7px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-repo:hover {
+            border-color: var(--purple-electric);
+            background: rgba(138, 43, 226, 0.15);
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .lang-toggle-btn {
+            height: 36px;
+            padding: 0 10px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+
+        .lang-toggle-btn:hover {
+            background: var(--purple-electric);
+            color: #FFFFFF;
+            border-color: var(--purple-electric);
+            transform: translateY(-1px);
+        }
+
+        .lang-toggle-btn i {
+            color: var(--cyan-accent);
+            font-size: 13px;
+        }
+
+        .lang-toggle-btn:hover i {
+            color: #FFFFFF;
+        }
+
+        .theme-toggle {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--purple-electric);
+            color: #FFFFFF;
+            border-color: var(--purple-electric);
+        }
+
+        /* Documentation Layout */
+        .docs-wrapper {
+            display: flex;
+            max-width: 1600px;
+            margin: 68px auto 0 auto;
+            min-height: calc(100vh - 68px);
+        }
+
+        /* Left Sidebar Navigation */
+        .docs-sidebar {
+            width: var(--sidebar-width);
+            flex-shrink: 0;
+            background: var(--bg-sidebar);
+            border-right: 1px solid var(--sidebar-border);
+            height: calc(100vh - 68px);
+            position: sticky;
+            top: 68px;
+            overflow-y: auto;
+            padding: 24px 16px 40px 20px;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(138, 43, 226, 0.3) transparent;
+        }
+
+        .sidebar-search {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-search input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 8px 12px 8px 34px;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-family: var(--font-main);
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .sidebar-search input:focus {
+            border-color: var(--cyan-accent);
+            box-shadow: 0 0 10px var(--cyan-glow);
+        }
+
+        .sidebar-search i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        .sidebar-group {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-group-title {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            padding-left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sidebar-group-title i {
+            color: var(--purple-electric);
+            font-size: 12px;
+        }
+
+        .sidebar-nav-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .sidebar-nav-list a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 12px;
+            border-radius: 6px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+
+        .sidebar-nav-list a i {
+            font-size: 13px;
+            width: 16px;
+            text-align: center;
+            color: var(--text-muted);
+            transition: color 0.15s ease;
+        }
+
+        .sidebar-nav-list a:hover {
+            background: rgba(138, 43, 226, 0.08);
+            color: var(--text-primary);
+        }
+
+        .sidebar-nav-list a:hover i {
+            color: var(--cyan-accent);
+        }
+
+        .sidebar-nav-list a.active {
+            background: rgba(0, 229, 255, 0.1);
+            color: var(--cyan-accent);
+            border-left: 3px solid var(--cyan-accent);
+            font-weight: 600;
+            padding-left: 9px;
+        }
+
+        /* Main Content */
+        .docs-content {
+            flex: 1;
+            min-width: 0;
+            padding: 40px 48px 80px 48px;
+            max-width: 1050px;
+        }
+
+        .doc-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-family: var(--font-mono);
+        }
+
+        .doc-breadcrumb a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .doc-breadcrumb a:hover {
+            color: var(--cyan-accent);
+        }
+
+        .doc-header {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 24px;
+            margin-bottom: 36px;
+        }
+
+        .doc-header h1 {
+            font-size: 34px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .doc-header h1 span {
+            color: var(--purple-electric);
+        }
+
+        .doc-lead {
+            font-size: 17px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .doc-meta-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 18px;
+            align-items: center;
+        }
+
+        .meta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-family: var(--font-mono);
+            color: var(--text-secondary);
+        }
+
+        .meta-pill i {
+            color: var(--cyan-accent);
+        }
+
+        .doc-section {
+            margin-bottom: 60px;
+            scroll-margin-top: 90px;
+        }
+
+        h2.section-heading {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-top: 40px;
+            margin-bottom: 18px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        h2.section-heading i {
+            color: var(--cyan-accent);
+            font-size: 20px;
+        }
+
+        h3.sub-heading {
+            font-size: 19px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-top: 28px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        h3.sub-heading i {
+            color: var(--purple-electric);
+            font-size: 16px;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        ul, ol {
+            margin-bottom: 18px;
+            padding-left: 24px;
+            color: var(--text-secondary);
+            font-size: 15px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        code {
+            font-family: var(--font-mono);
+            font-size: 13.5px;
+            background: rgba(138, 43, 226, 0.12);
+            color: var(--cyan-accent);
+            padding: 2px 6px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 229, 255, 0.2);
+        }
+
+        .code-block-wrapper {
+            position: relative;
+            margin: 20px 0 28px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            background: var(--code-bg);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #11131c;
+            padding: 8px 16px;
+            border-bottom: 1px solid var(--border-color);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .code-lang-tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+            color: var(--cyan-accent);
+            text-transform: uppercase;
+        }
+
+        .copy-code-btn {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 4px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: var(--font-mono);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .copy-code-btn:hover {
+            background: var(--purple-electric);
+            color: #fff;
+            border-color: var(--purple-electric);
+        }
+
+        .code-block-wrapper pre {
+            margin: 0 !important;
+            padding: 16px 20px !important;
+            background: transparent !important;
+            overflow-x: auto;
+        }
+
+        .code-block-wrapper pre code {
+            background: transparent !important;
+            padding: 0 !important;
+            border: none !important;
+            color: #e0e0e0;
+            font-size: 13.5px;
+            line-height: 1.55;
+        }
+
+        .callout {
+            margin: 22px 0;
+            padding: 16px 20px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            background: var(--bg-card);
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .callout-icon {
+            font-size: 18px;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .callout-content {
+            flex: 1;
+            font-size: 14.5px;
+        }
+
+        .callout-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .callout-title {
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .callout.info {
+            border-left-color: var(--info-color);
+            background: rgba(59, 130, 246, 0.08);
+        }
+        .callout.info .callout-icon,
+        .callout.info .callout-title { color: var(--info-color); }
+
+        .callout.tip {
+            border-left-color: var(--cyan-accent);
+            background: rgba(0, 229, 255, 0.08);
+        }
+        .callout.tip .callout-icon,
+        .callout.tip .callout-title { color: var(--cyan-accent); }
+
+        .callout.warning {
+            border-left-color: var(--warning-color);
+            background: rgba(245, 158, 11, 0.08);
+        }
+        .callout.warning .callout-icon,
+        .callout.warning .callout-title { color: var(--warning-color); }
+
+        .callout.important {
+            border-left-color: var(--purple-electric);
+            background: rgba(138, 43, 226, 0.08);
+        }
+        .callout.important .callout-icon,
+        .callout.important .callout-title { color: var(--purple-electric); }
+
+        /* Shapes in table */
+        .geom-preview-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 0;
+        }
+
+        .geom-shape {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            transition: transform 0.2s ease;
+        }
+
+        .shape-round-rect-query {
+            width: 48px;
+            height: 30px;
+            border-radius: 8px;
+            background: #00d4ff;
+            color: #b71c1c;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 14px #00d4ff;
+        }
+
+        .shape-octagon-asn {
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            background: #3b82f6;
+            color: #ffffff;
+            border: 2px solid #60a5fa;
+        }
+
+        .shape-domain-ellipse {
+            border-radius: 50%;
+            background: #00b4d8;
+            color: #ffffff;
+            border: 2px solid #0096c7;
+        }
+
+        .shape-subdomain-ellipse {
+            border-radius: 50%;
+            background: #4ecdc4;
+            color: #0b0f19;
+            border: 1.5px solid #3aa39c;
+        }
+
+        .shape-ip-rect {
+            width: 44px;
+            height: 28px;
+            border-radius: 4px;
+            background: #9b59b6;
+            color: #ffffff;
+            border: 2px solid #8e44ad;
+        }
+
+        .shape-service-hex {
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            background: #f39c12;
+            color: #0b0f19;
+            border: 1.5px solid #e67e22;
+        }
+
+        .shape-https-hex {
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            background: #27ae60;
+            color: #ffffff;
+            border: 2px solid #229954;
+        }
+
+        .shape-vuln-diamond {
+            transform: rotate(45deg);
+            width: 26px;
+            height: 26px;
+            background: #e74c3c;
+            color: #ffffff;
+            border: 2px solid #c0392b;
+            margin: 6px 0;
+        }
+
+        .shape-vuln-diamond span {
+            transform: rotate(-45deg);
+            display: inline-block;
+            font-size: 8px;
+        }
+
+        .shape-kev-diamond {
+            transform: rotate(45deg);
+            width: 26px;
+            height: 26px;
+            background: #ff1744;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            box-shadow: 0 0 12px #ff1744;
+            margin: 6px 0;
+        }
+
+        .shape-kev-diamond span {
+            transform: rotate(-45deg);
+            display: inline-block;
+            font-size: 8px;
+        }
+
+        .shape-cluster-services {
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+            background: #d35400;
+            color: #ffffff;
+            border: 2px dashed #ffffff;
+        }
+
+        .shape-cluster-vulns {
+            transform: rotate(45deg);
+            width: 26px;
+            height: 26px;
+            background: #c0392b;
+            color: #ffffff;
+            border: 2px dashed #ffffff;
+            margin: 6px 0;
+        }
+
+        .shape-cluster-vulns span {
+            transform: rotate(-45deg);
+            display: inline-block;
+            font-size: 8px;
+        }
+
+        /* Tables */
+        .table-responsive {
+            overflow-x: auto;
+            margin: 20px 0 28px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background: var(--bg-card);
+        }
+
+        table.doc-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            text-align: left;
+        }
+
+        table.doc-table th {
+            background: #11131c;
+            color: var(--text-primary);
+            padding: 12px 16px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            font-family: var(--font-mono);
+            font-size: 13px;
+        }
+
+        table.doc-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+        }
+
+        table.doc-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+
+        .doc-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 22px;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .doc-card:hover {
+            border-color: var(--cyan-accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .doc-card-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(138, 43, 226, 0.12);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--cyan-accent);
+            margin-bottom: 16px;
+        }
+
+        .doc-card h4 {
+            font-size: 16.5px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .doc-card p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        .mermaid-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 24px;
+            margin: 24px 0;
+            overflow-x: auto;
+            text-align: center;
+        }
+
+        /* Right Table of Contents */
+        .docs-toc {
+            width: var(--toc-width);
+            flex-shrink: 0;
+            height: calc(100vh - 68px);
+            position: sticky;
+            top: 68px;
+            overflow-y: auto;
+            padding: 30px 20px 40px 10px;
+            scrollbar-width: thin;
+        }
+
+        .toc-title {
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .toc-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            border-left: 1px solid var(--border-color);
+            padding-left: 12px;
+        }
+
+        .toc-list a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            display: block;
+            line-height: 1.4;
+        }
+
+        .toc-list a:hover,
+        .toc-list a.active {
+            color: var(--cyan-accent);
+            font-weight: 600;
+            transform: translateX(3px);
+        }
+
+        .docs-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 30px;
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 13.5px;
+            color: var(--text-muted);
+        }
+
+        .docs-footer a {
+            color: var(--cyan-accent);
+            text-decoration: none;
+        }
+
+        /* Responsive Breakpoints & Mobile Ergonomics */
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            top: 68px;
+            left: 0;
+            width: 100vw;
+            height: calc(100vh - 68px);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-backdrop.active {
+            display: block;
+            opacity: 1;
+        }
+
+        @media (max-width: 1200px) {
+            .docs-toc {
+                display: none;
+            }
+            .docs-content {
+                padding: 32px 28px 60px 28px;
+            }
+        }
+
+        @media (max-width: 860px) {
+            .sidebar-toggle-btn {
+                display: flex;
+            }
+            .nav-menu {
+                display: none;
+            }
+            .doc-badge {
+                display: none;
+            }
+            .docs-sidebar {
+                position: fixed;
+                left: -100%;
+                top: 68px;
+                height: calc(100vh - 68px);
+                z-index: 999;
+                background: var(--bg-primary);
+                width: 290px;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 12px 0 35px rgba(0, 0, 0, 0.75);
+                border-right: 1px solid var(--border-color);
+            }
+            .docs-sidebar.open {
+                left: 0;
+            }
+            .docs-content {
+                padding: 24px 16px 60px 16px;
+            }
+            .doc-header h1 {
+                font-size: 25px;
+            }
+            .doc-lead {
+                font-size: 15px;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .code-header {
+                padding: 8px 12px;
+            }
+            .code-block-wrapper pre {
+                padding: 12px 14px !important;
+            }
+            .docs-footer {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-container {
+                padding: 0 16px;
+            }
+            .navbar-logo span {
+                font-size: 16px;
+            }
+            .btn-repo span {
+                display: none;
+            }
+            .btn-repo {
+                padding: 7px 10px;
+            }
+            .doc-header h1 {
+                font-size: 22px;
+            }
+            h2.section-heading {
+                font-size: 20px;
+            }
+            h3.sub-heading {
+                font-size: 17px;
+            }
+            .callout {
+                padding: 12px 14px;
+                gap: 10px;
+            }
+            .callout-icon {
+                font-size: 16px;
+            }
+            .doc-card {
+                padding: 16px;
+            }
+            table.doc-table th, 
+            table.doc-table td {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Sidebar Backdrop Overlay -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar()"></div>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="nav-left">
+                <button class="sidebar-toggle-btn" onclick="toggleSidebar()" aria-label="Side Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <a href="/" class="navbar-logo">
+                    <img src="https://avatars.githubusercontent.com/u/129181562" alt="DetecTI Logo">
+                    <span>Detec<span class="ti-highlight">TI</span> Security</span>
+                </a>
+                <span class="doc-badge">DetecTI-CLI Docs</span>
+            </div>
+
+            <ul class="nav-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/#ecossistema">Ecosystem</a></li>
+                <li class="nav-dropdown" id="docDropdown">
+                    <a href="/docs/detecti-cli/en.html" class="nav-dropdown-toggle active" onclick="toggleDocDropdown(event)">
+                        <span>Documentation</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="/docs/detecti-cli/en.html" class="dropdown-item">
+                                <div class="dropdown-item-icon">
+                                    <i class="fa-solid fa-terminal"></i>
+                                </div>
+                                <div class="dropdown-item-text">
+                                    <span class="dropdown-item-title">DetecTI-CLI</span>
+                                    <span class="dropdown-item-desc">EASM & Threat Intel Engine</span>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="/blog/">Blog</a></li>
+            </ul>
+
+            <div class="nav-actions">
+                <a href="https://github.com/detectisec/DetecTI-CLI" target="_blank" class="btn-repo">
+                    <i class="fa-brands fa-github"></i>
+                    <span>Repository</span>
+                </a>
+                <a href="/docs/detecti-cli/" class="lang-toggle-btn" title="Mudar para documentação em Português">
+                    <i class="fa-solid fa-globe"></i>
+                    <span>PT</span>
+                </a>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle theme">
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== DOCS WRAPPER ===== -->
+    <div class="docs-wrapper">
+
+        <!-- ===== 1. LEFT SIDEBAR ===== -->
+        <aside class="docs-sidebar" id="docsSidebar">
+            <div class="sidebar-search">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="docSearch" placeholder="Search documentation..." onkeyup="searchDocs()">
+            </div>
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-title">
+                    <i class="fa-solid fa-rocket"></i> Getting Started
+                </div>
+                <ul class="sidebar-nav-list">
+                    <li><a href="#introducao" class="active"><i class="fa-solid fa-info-circle"></i> Introduction</a></li>
+                    <li><a href="#arquitetura"><i class="fa-solid fa-sitemap"></i> Architecture & Pipeline</a></li>
+                    <li><a href="#quickstart"><i class="fa-solid fa-bolt"></i> Installation Guide</a></li>
+                    <li><a href="#configuracao"><i class="fa-solid fa-key"></i> Configuration & APIs</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-title">
+                    <i class="fa-solid fa-terminal"></i> CLI Operation
+                </div>
+                <ul class="sidebar-nav-list">
+                    <li><a href="#cli-syntax"><i class="fa-solid fa-code"></i> Syntax & Commands</a></li>
+                    <li><a href="#cli-targets"><i class="fa-solid fa-bullseye"></i> Targets & Scans</a></li>
+                    <li><a href="#cli-modules"><i class="fa-solid fa-puzzle-piece"></i> Recon Modules</a></li>
+                    <li><a href="#cli-persistence"><i class="fa-solid fa-database"></i> SQLite EASM Persistence</a></li>
+                    <li><a href="#cli-reports"><i class="fa-solid fa-file-export"></i> Reports & Export</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-title">
+                    <i class="fa-solid fa-chart-network"></i> WebGUI (Hound)
+                </div>
+                <ul class="sidebar-nav-list">
+                    <li><a href="#webgui-overview"><i class="fa-solid fa-desktop"></i> Hound Overview</a></li>
+                    <li><a href="#webgui-daemon"><i class="fa-solid fa-play"></i> Daemon Server Management</a></li>
+                    <li><a href="#webgui-topology"><i class="fa-solid fa-circle-nodes"></i> Graph Topology</a></li>
+                    <li><a href="#webgui-filters"><i class="fa-solid fa-filter"></i> Filters & Prioritization</a></li>
+                    <li><a href="#webgui-inspector"><i class="fa-solid fa-magnifying-glass-chart"></i> Asset Inspector</a></li>
+                </ul>
+            </div>
+
+            <div class="sidebar-group">
+                <div class="sidebar-group-title">
+                    <i class="fa-solid fa-shield-halved"></i> Threat Intelligence
+                </div>
+                <ul class="sidebar-nav-list">
+                    <li><a href="#intel-epss-cisa"><i class="fa-solid fa-fire"></i> EPSS & CISA KEV</a></li>
+                    <li><a href="#intel-weaponization"><i class="fa-solid fa-skull-crossbones"></i> ExploitDB & PoCs</a></li>
+                    <li><a href="#intel-relational"><i class="fa-solid fa-diagram-project"></i> Relational Synthesis</a></li>
+                </ul>
+            </div>
+        </aside>
+
+        <!-- ===== 2. MAIN CONTENT ===== -->
+        <main class="docs-content">
+            
+            <!-- Breadcrumb -->
+            <div class="doc-breadcrumb">
+                <a href="/">Home</a> <span>/</span>
+                <a href="#">Docs</a> <span>/</span>
+                <span>DetecTI-CLI Community Edition</span>
+            </div>
+
+            <!-- Page Header -->
+            <header class="doc-header">
+                <h1>DetecTI-CLI <span>Community Edition</span></h1>
+                <p class="doc-lead">
+                    Modern High-Performance, Asynchronous & Modular Engine for <strong>External Attack Surface Management (EASM)</strong>, 
+                    Asset Reconnaissance, and Vulnerability Weaponization Intelligence.
+                </p>
+                <div class="doc-meta-bar">
+                    <span class="meta-pill"><i class="fa-brands fa-python"></i> Python 3.11+</span>
+                    <span class="meta-pill"><i class="fa-solid fa-bolt"></i> Asyncio / HTTPX</span>
+                    <span class="meta-pill"><i class="fa-solid fa-database"></i> SQLite EASM</span>
+                    <span class="meta-pill"><i class="fa-solid fa-project-diagram"></i> Cytoscape.js</span>
+                    <span class="meta-pill"><i class="fa-solid fa-scale-balanced"></i> MIT License</span>
+                </div>
+            </header>
+
+            <!-- SECTION 1: INTRODUCTION -->
+            <section id="introducao" class="doc-section">
+                <h2 class="section-heading"><i class="fa-solid fa-info-circle"></i> 1. Introduction</h2>
+                <p>
+                    <strong>DetecTI-CLI</strong> was engineered by <strong>DetecTI Security</strong> to solve one of the greatest challenges 
+                    faced by offensive teams (Red Teams, Pentesters) and defensive operations (SOC, Threat Hunters, Blue Teams): <em>fragmented visibility and alert fatigue</em> across 
+                    the external internet-facing attack surface.
+                </p>
+                <p>
+                    Instead of running isolated tools and stitching together disconnected CSVs, DetecTI-CLI executes as a <strong>unified orchestration pipeline</strong>. It discovers exposed internet assets, correlates organizational relationships via <strong>Reverse WHOIS</strong> and <strong>Certificate Transparency</strong>, maps active services, and automatically enriches every vulnerability with real-world exploitation risk (<strong>FIRST EPSS</strong>), active exploitation & ransomware tracking (<strong>CISA KEV</strong>), weakness classification (<strong>CWE</strong>), and public weaponization proofs (<strong>ExploitDB + GitHub PoCs</strong>).
+                </p>
+
+                <div class="callout tip">
+                    <div class="callout-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">BloodHound Philosophy for EASM</div>
+                        <p>Just as BloodHound transformed Active Directory attack path analysis by modeling permissions as graphs, DetecTI-CLI models the external attack surface as an interconnected, query-anchored graph (Target Root &rarr; Domains &rarr; IPs &rarr; Services &rarr; CVEs &rarr; PoCs).</p>
+                    </div>
+                </div>
+
+                <div class="cards-grid">
+                    <div class="doc-card">
+                        <div class="doc-card-icon"><i class="fa-solid fa-globe"></i></div>
+                        <h4>High-Concurrency EASM</h4>
+                        <p>Ultra-fast asynchronous scans for single IPs, CIDR ranges (/24), root domains, emails, CVE IDs, and complex Shodan/Censys queries.</p>
+                    </div>
+                    <div class="doc-card">
+                        <div class="doc-card-icon"><i class="fa-solid fa-crosshairs"></i></div>
+                        <h4>Real-World Risk Prioritization</h4>
+                        <p>Eliminate alert fatigue: prioritize critical exposures by crossing CVSS Base with FIRST EPSS probability and CISA KEV exploitation flags.</p>
+                    </div>
+                    <div class="doc-card">
+                        <div class="doc-card-icon"><i class="fa-solid fa-chart-pie"></i></div>
+                        <h4>Interactive Attack Surface Graph</h4>
+                        <p>Built-in DetecTI Hound WebGUI powered by FastAPI + Cytoscape.js for intuitive node inspection, area selection, and scoped lead filtering.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: ARCHITECTURE -->
+            <section id="arquitetura" class="doc-section">
+                <h2 class="section-heading"><i class="fa-solid fa-sitemap"></i> 2. Architecture & Correlation Pipeline</h2>
+                <p>
+                    The DetecTI engine executes an asynchronous, multi-stage pipeline designed to discover, deduplicate, enrich with threat intelligence, and synthesize attack surfaces into relational SQLite databases.
+                </p>
+
+                <div class="mermaid-container">
+                    <pre class="mermaid">
+flowchart TD
+    classDef input fill:#1e293b,stroke:#00d4ff,stroke-width:2px,color:#fff
+    classDef recon fill:#1e1e2e,stroke:#3b82f6,stroke-width:2px,color:#fff
+    classDef enrich fill:#2a1b3d,stroke:#8a2be2,stroke-width:2px,color:#fff
+    classDef intel fill:#3b1e1e,stroke:#ef4444,stroke-width:2px,color:#fff
+    classDef correlate fill:#143024,stroke:#10b981,stroke-width:2px,color:#fff
+    classDef output fill:#2d2d2d,stroke:#f59e0b,stroke-width:2px,color:#fff
+
+    TARGET([🎯 Target Input: IP / CIDR / Domain / CVE / Query]):::input --> CLASSIFY[Target Classification & Validation]:::input
+
+    subgraph Stage1 [Stage 1: Primary Reconnaissance & Target Discovery]
+        CLASSIFY -->|Domain / Email| CRTSH[📜 crt.sh: Certificate Transparency]:::recon
+        CLASSIFY -->|Domain / IP / Email| WHOIS[🏢 Reverse WHOIS: Hybrid WhoisFreaks]:::recon
+        CLASSIFY -->|Domain / IP / CIDR / Query| SHODAN[🛰️ Shodan: Host Profile & Banners]:::recon
+        CLASSIFY -->|Direct IP / Fallback| CENSYS_DIRECT[🌐 Censys: Direct IP Profile]:::recon
+    end
+
+    subgraph Stage1_5 [Stage 1.5: Complementary Censys Host Enrichment]
+        CRTSH & WHOIS & SHODAN -->|Discovered Host IPs| IP_EXTRACT[Unique IP Extraction]:::recon
+        IP_EXTRACT -->|Parallel Host Dossiers| CENSYS_ENRICH[🌐 Censys API v3: Ports, TLS & CVEs]:::recon
+    end
+
+    subgraph Stage2 [Stage 2: Threat Intelligence & Vulnerability Scoring]
+        SHODAN & CENSYS_DIRECT & CENSYS_ENRICH -->|Aggregated CVEs| CVE_AGG[CVE Aggregator & Deduplication]:::enrich
+        CVE_AGG --> NVD[🛡️ NVD 2.0: CVSS Base + Vector + CWE Name]:::intel
+        CVE_AGG --> EPSS[📈 FIRST EPSS: Exploit Probability %]:::intel
+        CVE_AGG --> CISA[🚨 CISA KEV: Ransomware & In-the-Wild Flag]:::intel
+    end
+
+    subgraph Stage3 [Stage 3: Weaponization & PoC Hunting]
+        CVE_AGG --> XDB[💣 ExploitDB: Verified Exploits & Shellcodes]:::intel
+        CVE_AGG --> GITHUB[🐙 GitHub PoC Hunter: Exploit Repositories]:::intel
+    end
+
+    subgraph Stage4 [Stage 4: Unified Graph Modeling & Correlation]
+        NVD & EPSS & CISA & XDB & GITHUB --> CORRELATION[🔗 Unified EASM Graph Correlation]:::correlate
+        CRTSH & WHOIS & SHODAN & CENSYS_ENRICH --> CORRELATION
+    end
+
+    subgraph Stage5 [Stage 5: Multi-Channel Output]
+        CORRELATION --> DB[(💾 SQLite Persistence ./data/dbs/)]:::output
+        CORRELATION --> CLI[📊 Rich Terminal: Tables & Risk Badges]:::output
+        CORRELATION --> REPORT[📄 JSON, Markdown & HTML Reports]:::output
+        CORRELATION --> WEB[🌐 DetecTI Hound Web Dashboard]:::output
+    end
+                    </pre>
+                </div>
+
+                <h3 class="sub-heading"><i class="fa-solid fa-diagram-nested"></i> Relational Topology Hierarchy</h3>
+                <div class="code-block-wrapper">
+                    <div class="code-header">
+                        <span class="code-lang-tag"><i class="fa-solid fa-code-fork"></i> Relationship Hierarchy</span>
+                    </div>
+                    <pre><code class="language-bash">Target Query Root
+  ├── MATCHES_DOMAIN ──► Domains / Organizations
+  │     ├── HAS_SUBDOMAIN ──► Subdomains (crt.sh / DNS)
+  │     │     └── RESOLVES_TO ──► Hosts / IPs
+  │     └── CONTAINS_IP ──► Hosts / IPs
+  │           └── EXPOSES ──► Services / Ports (HTTP, SSH, RDP, TLS)
+  │                 └── HAS_VULN ──► CVEs (NVD CVSS / CWE)
+  │                       ├── ENRICHED_WITH ──► FIRST EPSS + CISA KEV
+  │                       └── WEAPONIZED_BY ──► ExploitDB + GitHub PoCs</code></pre>
+                </div>
+            </section>
+
+            <!-- SECTION 3: QUICKSTART -->
+            <section id="quickstart" class="doc-section">
+                <h2 class="section-heading"><i class="fa-solid fa-bolt"></i> 3. Installation Guide (Quickstart)</h2>
+                <p>
+                    DetecTI-CLI runs natively across Linux, macOS, and Windows (via WSL2).
+                </p>
+
+                <div class="callout important">
+                    <div class="callout-icon"><i class="fa-solid fa-circle-exclamation"></i></div>
+                    <div class="callout-content">
+                        <div class="callout-title">System Requirements</div>
+                        <p>Requires <strong>Python 3.11 or higher</strong> and <code>pip</code> / <code>venv</code> virtual environment manager.</p>
+                    </div>
+                </div>
+
+                <h3 class="sub-heading"><i class="fa-solid fa-download"></i> Step 1: Clone and Install Dependencies</h3>
+                <div class="code-block-wrapper">
+                    <div class="code-header">
+                        <span class="code-lang-tag"><i class="fa-solid fa-terminal"></i> Bash</span>
+                        <button class="copy-code-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-bash"># Clone repository
+git clone https://github.com/detectisec/DetecTI-CLI.git
+cd DetecTI-CLI
+
+# Create and activate virtual environment
+python3 -m venv detecti-venv
+source detecti-venv/bin/activate
+
+# Install in editable mode
+pip install -e .
+
+# Grant executable permission
+chmod +x detecti-cli</code></pre>
+                </div>
+
+                <h3 class="sub-heading"><i class="fa-solid fa-database"></i> Step 2: Initialize Exploit Database (ExploitDB)</h3>
+                <div class="code-block-wrapper">
+                    <div class="code-header">
+                        <span class="code-lang-tag"><i class="fa-solid fa-terminal"></i> Bash</span>
+                        <button class="copy-code-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-bash">./detecti-cli update-xdb</code></pre>
+                </div>
+            </section>
+
+            <!-- SECTION 4: CONFIGURATION -->
+            <section id="configuracao" class="doc-section">
+                <h2 class="section-heading"><i class="fa-solid fa-key"></i> 4. Configuration & API Keys</h2>
+                <p>
+                    DetecTI-CLI includes free out-of-the-box fallbacks (<strong>crt.sh</strong>, <strong>HackerTarget</strong>, <strong>FIRST EPSS</strong>, <strong>CISA KEV</strong>, and <strong>GitHub PoC API</strong>). To unlock deeper network range profiling, configure your API keys in <code>.env</code>:
+                </p>
+
+                <div class="code-block-wrapper">
+                    <div class="code-header">
+                        <span class="code-lang-tag"><i class="fa-solid fa-file-code"></i> .env</span>
+                        <button class="copy-code-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-bash"># [Recommended] Shodan API Key
+SHODAN_API_KEY="your_shodan_api_key_here"
+
+# [Optional] Censys Platform API v3 PAT Token and Org ID
+CENSYS_PAT_TOKEN="your_censys_pat_token_here"
+CENSYS_ORG_ID="your_censys_org_id_here"
+
+# [Optional] NVD API Key (Accelerates CVSS/CWE rate-limits)
+NVD_API_KEY="your_nvd_api_key_here"
+
+# [Optional] WhoisFreaks API Key (Structured Reverse WHOIS)
+WHOISFREAKS_API_KEY="your_whoisfreaks_api_key_here"
+
+# [Optional] GitHub Personal Access Token
+GITHUB_TOKEN="your_github_token_here"</code></pre>
+                </div>
+
+                <h3 class="sub-heading"><i class="fa-solid fa-circle-check"></i> Verify Configuration</h3>
+                <div class="code-block-wrapper">
+                    <div class="code-header">
+                        <span class="code-lang-tag"><i class="fa-solid fa-terminal"></i> Bash</span>
+                        <button class="copy-code-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-bash">./detecti-cli config-check</code></pre>
+                </div>
+            </section>
+
+            <!-- SECTION 5: CLI OPERATION -->
+            <section id="cli-syntax" class="doc-section">
+                <h2 class="section-heading"><i class="fa-solid fa-terminal"></i> 5. CLI Operation & Scans</h2>
+
+                <h3 class="sub-heading" id="cli-targets"><i class="fa-solid fa-bullseye"></i> Target Scan Modes</h3>
+                <div class="table-responsive">
+                    <table class="doc-table">
+                        <thead>
+                            <tr>
+                                <th>Target Type</th>
+                                <th>CLI Example</th>
+                                <th>Pipeline Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Root Domain</strong></td>
+                                <td><code>./detecti-cli scan -t spacex.com</code></td>
+                                <td>crt.sh enum + Reverse WHOIS + DNS resolution + Shodan/Censys + CVE Scoring</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Single IP Address</strong></td>
+                                <td><code>./detecti-cli scan -t 142.250.191.68</code></td>
+                                <td>Shodan profile + Censys v3 dossier + Ports + Banners + CVEs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CIDR Subnet Range</strong></td>
+                                <td><code>./detecti-cli scan -t 142.250.191.0/24</code></td>
+                                <td>Network block scan + Active host discovery + Port correlation</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CVE Identifier</strong></td>
+                                <td><code>./detecti-cli scan -t CVE-2021-44228</code></td>
+                                <td>NVD CVSS v3.1 + CWE + FIRST EPSS % + CISA KEV flag + ExploitDB + PoCs</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Shodan Custom Query</strong></td>
+                                <td><code>./detecti-cli scan -t "org:'Acme Corp' port:443"</code></td>
+                                <td>Custom infrastructure asset discovery & vulnerability correlation</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="sub-heading" id="cli-persistence"><i class="fa-solid fa-database"></i> SQLite EASM Persistence</h3>
+                <div class="code-block-wrapper">
+                    <div class="code-header">
+                        <span class="code-lang-tag"><i class="fa-solid fa-terminal"></i> Bash</span>
+                        <button class="copy-code-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-bash"># Scan domain and persist into ./data/dbs/company.sqlite
+./detecti-cli scan -t company.com --create-db company
+
+# Scan subnet and persist into ./data/dbs/datacenter.sqlite
+./detecti-cli scan -t 198.51.100.0/24 --create-db datacenter</code></pre>
+                </div>
+
+                <h3 class="sub-heading" id="cli-reports"><i class="fa-solid fa-file-export"></i> Executive Reports & Export</h3>
+                <div class="code-block-wrapper">
+                    <div class="code-header">
+                        <span class="code-lang-tag"><i class="fa-solid fa-terminal"></i> Export Examples</span>
+                        <button class="copy-code-btn" onclick="copyCode(this)"><i class="fa-regular fa-copy"></i> Copy</button>
+                    </div>
+                    <pre><code class="language-bash"># 1. Executive Markdown Report
+./detecti-cli scan -t company.com -o markdown -f executive_report.md
+
+# 2. Standalone Styled HTML Report (Print & PDF Ready)
+./detecti-cli scan -t company.com -o html -f easm_report.html
+
+# 3. Structured JSON for SIEM/SOAR integration
+./detecti-cli scan -t company.com -o json -f attack_surface.json
+
+# 4. Batch export of all formats into a directory
+./detecti-cli scan -t company.com -o all -d ./exports/company/</code></pre>
+                </div>
+            </section>
+
+            <!-- SECTION 6: WEBGUI -->
+            <section id="webgui-overview" class="doc-section">
+                <h2 class="section-heading"><i class="fa-solid fa-chart-network"></i> 6. WebGUI: DetecTI Hound Dashboard</h2>
+                <p>
+                    <strong>DetecTI Hound</strong> provides an interactive graph visualization experience inspired by SpecterOps BloodHound, powered by <strong>FastAPI</strong> and <strong>Cytoscape.js</strong>.
+                </p>
+
+                <h3 class="sub-heading" id="webgui-daemon"><i class="fa-solid fa-server"></i> Daemon Server Commands</h3>
+                <div class="table-responsive">
+                    <table class="doc-table">
+                        <thead>
+                            <tr>
+                                <th>Command</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>./detecti-cli hound start</code></td>
+                                <td>Starts background FastAPI server on port <code>8000</code> (http://127.0.0.1:8000).</td>
+                            </tr>
+                            <tr>
+                                <td><code>./detecti-cli hound list-dbs</code></td>
+                                <td>Lists all saved SQLite attack surface databases in <code>./data/dbs/</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>./detecti-cli hound status</code></td>
+                                <td>Checks daemon status (PID, port, uptime).</td>
+                            </tr>
+                            <tr>
+                                <td><code>./detecti-cli hound stop</code></td>
+                                <td>Safely terminates background Hound server process.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="sub-heading" id="webgui-topology"><i class="fa-solid fa-circle-nodes"></i> Graph Topology & Semantic Visual Guide</h3>
+                <div class="table-responsive">
+                    <table class="doc-table">
+                        <thead>
+                            <tr>
+                                <th>Node Type</th>
+                                <th style="text-align: center; width: 130px;">Graph Shape</th>
+                                <th>Color Identifier</th>
+                                <th>Operational Meaning</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Target Root / Main Query</strong></td>
+                                <td class="geom-preview-cell">
+                                    <div class="geom-shape shape-round-rect-query" title="Cyan Rounded Rectangle">Query</div>
+                                </td>
+                                <td><span style="color:#00d4ff; font-weight:bold;">Cyan (#00d4ff)</span></td>
+                                <td>Primary target query anchor that initiated the scan (domain, CIDR range, or CVE).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Organization / ASN Cluster</strong></td>
+                                <td class="geom-preview-cell">
+                                    <div class="geom-shape shape-octagon-asn" title="Royal Blue Octagon">ASN</div>
+                                </td>
+                                <td><span style="color:#3b82f6; font-weight:bold;">Royal Blue (#3b82f6)</span></td>
+                                <td>Organization or ASN network cluster (e.g., <i>Cloudflare, Inc.</i>) grouping multiple IP hosts.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Domain (Root / Org)</strong></td>
+                                <td class="geom-preview-cell">
+                                    <div class="geom-shape shape-domain-ellipse" title="Deep Blue Ellipse">dom</div>
+                                </td>
+                                <td><span style="color:#00b4d8; font-weight:bold;">Deep Blue (#00b4d8)</span></td>
+                                <td>Top-level registered domains discovered via reverse WHOIS correlation.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Subdomain / Host</strong></td>
+                                <td class="geom-preview-cell">
+                                    <div class="geom-shape shape-subdomain-ellipse" title="Turquoise Ellipse">sub</div>
+                                </td>
+                                <td><span style="color:#4ecdc4; font-weight:bold;">Turquoise (#4ecdc4)</span></td>
+                                <td>Resolved FQDN or DNS hostname (e.g. <code>api.example.com</code>).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Host / IP Address</strong></td>
+                                <td class="geom-preview-cell">
+                                    <div class="geom-shape shape-ip-rect" title="Purple Rectangle">IP</div>
+                                </td>
+                                <td><span style="color:#9b59b6; font-weight:bold;">Purple (#9b59b6)</span></td>
+                                <td>Active IPv4/IPv6 host infrastructure discovered during DNS/subnet resolution.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Standard Service / Port</strong></td>
+                                <td class="geom-preview-cell">
+                                    <div class="geom-shape shape-service-hex" title="Orange Hexagon">80/tcp</div>
+                                </td>
+                                <td><span style="color:#f39c12; font-weight:bold;">Orange (#f39c12)</span></td>
+                                <td>Open cleartext network port/service (HTTP, SSH, DNS, SMB) with captured banner.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>SSL / HTTPS Service</strong></td>
+                                <td class="geom-preview-cell">
+                                    <div class="geom-shape shape-https-hex" title="Green Hexagon">443/tcp</div>
+                                </td>
+                                <td><span style="color:#27ae60; font-weight:bold;">Emerald Green (#27ae60)</span></td>
+                                <td>Encrypted web service with valid SSL/TLS certificate identified.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vulnerability (CVE)</strong></td>
+                                <td class="geom-preview-cell">
+                                    <div class="geom-shape shape-vuln-diamond" title="Red Diamond"><span>CVE</span></div>
+                                </td>
+                                <td><span style="color:#e74c3c; font-weight:bold;">Red (#e74c3c)</span></td>
+                                <td>Security finding correlated with NVD CVSS base scores, CWE taxonomy, and PoCs.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>CISA KEV (Exploited)</strong></td>
+                                <td class="geom-preview-cell">
+                                    <div class="geom-shape shape-kev-diamond" title="Glowing Crimson Diamond"><span>KEV</span></div>
+                                </td>
+                                <td><span style="color:#ff1744; font-weight:bold;">Crimson (#ff1744)</span></td>
+                                <td>Vulnerability confirmed in active in-the-wild exploitation cataloged by CISA KEV.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Service Cluster (+N)</strong></td>
+                                <td class="geom-preview-cell">
+                                    <div class="geom-shape shape-cluster-services" title="Dashed Hexagon">+15</div>
+                                </td>
+                                <td><span style="color:#d35400; font-weight:bold;">Burnt Orange (#d35400)</span></td>
+                                <td>Interactive collapsible node for high-density hosts with &gt;15 open ports.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Vulnerability Cluster (+N)</strong></td>
+                                <td class="geom-preview-cell">
+                                    <div class="geom-shape shape-cluster-vulns" title="Dashed Diamond"><span>+30</span></div>
+                                </td>
+                                <td><span style="color:#c0392b; font-weight:bold;">Dark Crimson (#c0392b)</span></td>
+                                <td>Interactive collapsible cluster for services with high-volume CVE counts.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- SECTION 7: THREAT INTEL -->
+            <section id="intel-epss-cisa" class="doc-section">
+                <h2 class="section-heading"><i class="fa-solid fa-shield-halved"></i> 7. Threat Intelligence & Risk Matrix</h2>
+                <div class="cards-grid">
+                    <div class="doc-card">
+                        <div class="doc-card-icon" style="color: #ef4444;"><i class="fa-solid fa-fire"></i></div>
+                        <h4>1. CISA KEV (Active Exploits)</h4>
+                        <p>Catalog of vulnerabilities actively leveraged in ransomware and targeted cyber campaigns (Priority 1).</p>
+                    </div>
+                    <div class="doc-card">
+                        <div class="doc-card-icon" style="color: #f59e0b;"><i class="fa-solid fa-chart-line"></i></div>
+                        <h4>2. FIRST EPSS Probability</h4>
+                        <p>Machine-learning predictive model estimating the probability of weaponization in the next 30 days.</p>
+                    </div>
+                    <div class="doc-card" id="intel-weaponization">
+                        <div class="doc-card-icon" style="color: #00e5ff;"><i class="fa-solid fa-skull"></i></div>
+                        <h4>3. Weaponization Index</h4>
+                        <p>Real-time cross-referencing against local ExploitDB archives and public GitHub proof-of-concept repositories.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DOCS FOOTER -->
+            <footer class="docs-footer">
+                <div>
+                    Official Technical Documentation Maintained by <a href="https://detecti.com.br" target="_blank"><strong>DetecTI Security</strong></a>.
+                </div>
+                <div>
+                    Open source under MIT License • <a href="https://github.com/detectisec/DetecTI-CLI" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                </div>
+            </footer>
+
+        </main>
+
+        <!-- ===== 3. RIGHT TOC ===== -->
+        <aside class="docs-toc">
+            <div class="toc-title">
+                <i class="fa-solid fa-list-ul"></i> On this page
+            </div>
+            <ul class="toc-list" id="tocList">
+                <li><a href="#introducao" class="active">1. Introduction</a></li>
+                <li><a href="#arquitetura">2. Architecture & Pipeline</a></li>
+                <li><a href="#quickstart">3. Installation Guide</a></li>
+                <li><a href="#configuracao">4. Configuration & APIs</a></li>
+                <li><a href="#cli-syntax">5. CLI Operation</a></li>
+                <li><a href="#webgui-overview">6. DetecTI Hound (WebGUI)</a></li>
+                <li><a href="#intel-epss-cisa">7. Threat Intelligence</a></li>
+            </ul>
+        </aside>
+
+    </div>
+
+    <!-- ===== SCRIPTS ===== -->
+    <script>
+        mermaid.initialize({
+            startOnLoad: true,
+            theme: 'dark',
+            themeVariables: {
+                darkMode: true,
+                background: '#191B26',
+                primaryColor: '#8A2BE2',
+                lineColor: '#00e5ff'
+            }
+        });
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('docsSidebar');
+            const backdrop = document.getElementById('sidebarBackdrop');
+            const isOpen = sidebar.classList.toggle('open');
+            if (backdrop) {
+                backdrop.classList.toggle('active', isOpen);
+            }
+        }
+
+        document.querySelectorAll('.sidebar-nav-list a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 860) {
+                    const sidebar = document.getElementById('docsSidebar');
+                    const backdrop = document.getElementById('sidebarBackdrop');
+                    if (sidebar) sidebar.classList.remove('open');
+                    if (backdrop) backdrop.classList.remove('active');
+                }
+            });
+        });
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.querySelector('.theme-toggle i');
+            body.classList.toggle('light-theme');
+
+            if (body.classList.contains('light-theme')) {
+                themeIcon.className = 'fa-solid fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                themeIcon.className = 'fa-solid fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+            const icon = document.querySelector('.theme-toggle i');
+            if (icon) icon.className = 'fa-solid fa-moon';
+        }
+
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block-wrapper').querySelector('pre code');
+            if (!pre) return;
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                const orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+                btn.style.background = 'var(--purple-electric)';
+                btn.style.color = '#fff';
+                setTimeout(() => {
+                    btn.innerHTML = orig;
+                    btn.style.background = '';
+                    btn.style.color = '';
+                }, 2000);
+            });
+        }
+
+        function searchDocs() {
+            const query = document.getElementById('docSearch').value.toLowerCase();
+            const items = document.querySelectorAll('.sidebar-nav-list li');
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('.doc-section');
+            const tocLinks = document.querySelectorAll('.toc-list a');
+            const sidebarLinks = document.querySelectorAll('.sidebar-nav-list a');
+
+            let currentSectionId = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 120;
+                if (window.pageYOffset >= sectionTop) {
+                    currentSectionId = section.getAttribute('id');
+                }
+            });
+
+            if (currentSectionId) {
+                tocLinks.forEach(link => {
+                    if (link.getAttribute('href') === `#${currentSectionId}`) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+
+                sidebarLinks.forEach(link => {
+                    if (link.getAttribute('href') === `#${currentSectionId}`) {
+                        link.classList.add('active');
+                    } else {
+                        link.classList.remove('active');
+                    }
+                });
+            }
+        });
+
+        function toggleDocDropdown(event) {
+            const dropdown = document.getElementById('docDropdown');
+            if (window.innerWidth <= 860 || 'ontouchstart' in window) {
+                event.preventDefault();
+                dropdown.classList.toggle('open');
+            }
+        }
+
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('docDropdown');
+            if (dropdown && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>

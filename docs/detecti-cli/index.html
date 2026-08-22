@@ -1478,42 +1478,42 @@ flowchart TD
     classDef correlate fill:#143024,stroke:#10b981,stroke-width:2px,color:#fff
     classDef output fill:#2d2d2d,stroke:#f59e0b,stroke-width:2px,color:#fff
 
-    TARGET([🎯 Target Input: IP / CIDR / Domain / CVE / Query]):::input --> CLASSIFY[Target Classification & Validation]:::input
+    TARGET([Target Input: IP / CIDR / Domain / CVE / Query]):::input --> CLASSIFY[Target Classification & Validation]:::input
 
     subgraph Stage1 [Estágio 1: Reconhecimento Primário]
-        CLASSIFY -->|Domain / Email| CRTSH[📜 crt.sh: Certificate Transparency]:::recon
-        CLASSIFY -->|Domain / IP / Email| WHOIS[🏢 Reverse WHOIS: Hybrid WhoisFreaks]:::recon
-        CLASSIFY -->|Domain / IP / CIDR / Query| SHODAN[🛰️ Shodan: Host Profile & Banners]:::recon
-        CLASSIFY -->|Direct IP / Fallback| CENSYS_DIRECT[🌐 Censys: Direct IP Profile]:::recon
+        CLASSIFY -->|Domain / Email| CRTSH[crt.sh: Certificate Transparency]:::recon
+        CLASSIFY -->|Domain / IP / Email| WHOIS[Reverse WHOIS: Hybrid WhoisFreaks]:::recon
+        CLASSIFY -->|Domain / IP / CIDR / Query| SHODAN[Shodan: Host Profile & Banners]:::recon
+        CLASSIFY -->|Direct IP / Fallback| CENSYS_DIRECT[Censys: Direct IP Profile]:::recon
     end
 
     subgraph Stage1_5 [Estágio 1.5: Enriquecimento Complementar Censys]
         CRTSH & WHOIS & SHODAN -->|IPs Descobertos| IP_EXTRACT[Extração & Deduplicação de IPs]:::recon
-        IP_EXTRACT -->|Dossiês Paralelos| CENSYS_ENRICH[🌐 Censys API v3: Ports, TLS & CVEs]:::recon
+        IP_EXTRACT -->|Dossiês Paralelos| CENSYS_ENRICH[Censys API v3: Ports, TLS & CVEs]:::recon
     end
 
     subgraph Stage2 [Estágio 2: Threat Intelligence & Scoring]
         SHODAN & CENSYS_DIRECT & CENSYS_ENRICH -->|Lista Única de CVEs| CVE_AGG[Agregador & Deduplicador de CVEs]:::enrich
-        CVE_AGG --> NVD[🛡️ NVD 2.0: CVSS Base + Vector + CWE Name]:::intel
-        CVE_AGG --> EPSS[📈 FIRST EPSS: Exploit Probability %]:::intel
-        CVE_AGG --> CISA[🚨 CISA KEV: Ransomware & In-the-Wild Flag]:::intel
+        CVE_AGG --> NVD[NVD 2.0: CVSS Base + Vector + CWE Name]:::intel
+        CVE_AGG --> EPSS[FIRST EPSS: Exploit Probability %]:::intel
+        CVE_AGG --> CISA[CISA KEV: Ransomware & In-the-Wild Flag]:::intel
     end
 
     subgraph Stage3 [Estágio 3: Weaponization & PoC Hunting]
-        CVE_AGG --> XDB[💣 ExploitDB: Scripts Verificados & Shellcodes]:::intel
-        CVE_AGG --> GITHUB[🐙 GitHub PoC Hunter: Repositórios de Exploit]:::intel
+        CVE_AGG --> XDB[ExploitDB: Scripts Verificados & Shellcodes]:::intel
+        CVE_AGG --> GITHUB[GitHub PoC Hunter: Repositórios de Exploit]:::intel
     end
 
     subgraph Stage4 [Estágio 4: Síntese & Modelo em Grafo]
-        NVD & EPSS & CISA & XDB & GITHUB --> CORRELATION[🔗 Correlação Unificada do Grafo EASM]:::correlate
+        NVD & EPSS & CISA & XDB & GITHUB --> CORRELATION[Correlação Unificada do Grafo EASM]:::correlate
         CRTSH & WHOIS & SHODAN & CENSYS_ENRICH --> CORRELATION
     end
 
     subgraph Stage5 [Estágio 5: Canais de Apresentação]
-        CORRELATION --> DB[(💾 SQLite Persistence ./data/dbs/)]:::output
-        CORRELATION --> CLI[📊 Rich Terminal: Tabelas & Badges]:::output
-        CORRELATION --> REPORT[📄 JSON, Markdown & HTML Standalone]:::output
-        CORRELATION --> WEB[🌐 DetecTI Hound Web Dashboard]:::output
+        CORRELATION --> DB[(SQLite Persistence ./data/dbs/)]:::output
+        CORRELATION --> CLI[Rich Terminal: Tabelas & Badges]:::output
+        CORRELATION --> REPORT[JSON, Markdown & HTML Standalone]:::output
+        CORRELATION --> WEB[DetecTI Hound Web Dashboard]:::output
     end
                     </pre>
                 </div>
@@ -1908,7 +1908,7 @@ GITHUB_TOKEN="seu_github_personal_token_aqui"</code></pre>
                                     <div class="geom-shape shape-cluster-services" title="Hexágono Tracejado">+15</div>
                                 </td>
                                 <td><span style="color:#d35400; font-weight:bold;">Laranja Queimado (#d35400)</span></td>
-                                <td>Nó agrupador colapsável para ativos com alta densidade (&gt;15 portas abertas) com contorno tracejado branco.</td>
+                                <td>Nó agrupador colapsável para ativos com múltiplos serviços abertos (automático para &gt;15 portas ou sob demanda via clique direito).</td>
                             </tr>
                             <tr>
                                 <td><strong>Cluster de CVEs (+N)</strong></td>
@@ -1916,22 +1916,41 @@ GITHUB_TOKEN="seu_github_personal_token_aqui"</code></pre>
                                     <div class="geom-shape shape-cluster-vulns" title="Losango Tracejado"><span>+30</span></div>
                                 </td>
                                 <td><span style="color:#c0392b; font-weight:bold;">Bordô (#c0392b)</span></td>
-                                <td>Nó agrupador colapsável para serviços com grande volume de falhas conhecidas, facilitando a limpeza visual do grafo.</td>
+                                <td>Nó agrupador colapsável para vulnerabilidades associadas a serviços ou diretamente a IPs (automático ou via clique direito).</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <h3 class="sub-heading" id="webgui-filters"><i class="fa-solid fa-filter"></i> Controles, Layouts e Filtros de Risco</h3>
-                <ul style="margin-left: 20px;">
-                    <li><strong>Seletor Dinâmico de Bancos:</strong> Alterne entre qualquer base de dados SQLite em <code>./data/dbs/</code> diretamente pelo menu superior sem reiniciar o servidor.</li>
-                    <li><strong>Algoritmos de Layout:</strong> Alterne com 1 clique entre <code>⚡ Force-Directed</code> (Cose-Bilkent), <code>🌳 Hierárquico Top-Down</code> (Dagre), <code>🎯 Concêntrico</code> e <code>▦ Grade</code>.</li>
+                <h3 class="sub-heading" id="webgui-filters"><i class="fa-solid fa-gamepad"></i> Navegação Interativa, Controles e Menu de Contexto</h3>
+                <ul style="margin-left: 20px; line-height: 1.7;">
+                    <li><strong>Clique com Botão Esquerdo (Arrastar):</strong> Pan e navegação contínua pelo canvas do grafo.</li>
+                    <li><strong>Clique com Botão Esquerdo (Nó):</strong> Seleção unitária do ativo e abertura do <strong>Asset Inspector Lateral</strong>.</li>
+                    <li><strong>Ctrl + Clique Esquerdo (ou Cmd no macOS):</strong> Multi-seleção sequencial aditiva para selecionar múltiplos nós sem perder a seleção prévia.</li>
+                    <li><strong>Clique com Botão Direito (Nó):</strong> Abre o <strong>Menu de Contexto Customizado</strong> com ações rápidas:
+                        <ul style="margin-top: 4px;">
+                            <li><i class="fa-solid fa-compress text-cyan"></i> <strong>Collapse / Uncollapse Services:</strong> Agrupa ou descolapsa serviços do IP.</li>
+                            <li><i class="fa-solid fa-compress text-cyan"></i> <strong>Collapse / Uncollapse Vulnerabilities:</strong> Agrupa ou descolapsa vulnerabilidades diretas de IP ou de serviços.</li>
+                            <li><i class="fa-solid fa-info-circle text-cyan"></i> <strong>Inspect Details:</strong> Abre a gaveta de detalhes técnicos do ativo.</li>
+                            <li><i class="fa-solid fa-crosshairs text-cyan"></i> <strong>Focus Node:</strong> Centraliza o zoom diretamente no nó selecionado.</li>
+                            <li><i class="fa-solid fa-copy text-cyan"></i> <strong>Copy Domain / Subdomain / IP / CVE:</strong> Copia o identificador textual do ativo para a área de transferência.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Clique com Botão Direito (Arrastar no Canvas):</strong> Seleção em área retangular (Box Area Selection) para mover blocos inteiros de nós.</li>
+                    <li><strong>Algoritmos de Layout:</strong>
+                        <ul style="margin-top: 4px;">
+                            <li><i class="fa-solid fa-sitemap text-cyan"></i> <code>Hierárquico Top-Down (Padrão)</code>: Topologia estruturada em árvore com espaçamento compacto e ajuste dinâmico a filtros.</li>
+                            <li><i class="fa-solid fa-atom text-cyan"></i> <code>Force-Directed</code>: Simulação física baseada em atração e repulsão com animação suave e estabilização de repulsão.</li>
+                            <li><i class="fa-solid fa-bullseye text-cyan"></i> <code>Concêntrico</code> e <i class="fa-solid fa-table-cells text-cyan"></i> <code>Grade</code>: Hierarquia orbital concêntrica e matriz uniforme de nós.</li>
+                        </ul>
+                    </li>
                     <li><strong>Filtros Rápidos de Risco:</strong>
-                        <ul style="margin-top: 6px;">
+                        <ul style="margin-top: 4px;">
                             <li><i class="fa-solid fa-check text-cyan"></i> <strong>Apenas CISA KEV:</strong> Exibe exclusivamente ativos com vulnerabilidades exploradas ativamente por agentes de ameaça/ransomware.</li>
                             <li><i class="fa-solid fa-check text-cyan"></i> <strong>Alto EPSS (&gt; 50%):</strong> Destaca falhas com probabilidade matemática iminente de exploração.</li>
                             <li><i class="fa-solid fa-check text-cyan"></i> <strong>Com Exploit/PoC Público:</strong> Filtra vulnerabilidades que possuem scripts no ExploitDB ou repositórios no GitHub.</li>
-                            <li><i class="fa-solid fa-check text-cyan"></i> <strong>Isolamento de Lead:</strong> Selecione um host específico para focar sua subárvore e ocultar ruídos laterais.</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> <strong>Apenas Serviços / Serviços Vulneráveis:</strong> Isola a camada de serviços e expõe apenas infraestrutura vulnerável.</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> <strong>Busca Textual com Herança Descendente:</strong> Localiza IPs, domínios ou portas preservando seus ancestrais até o alvo e seus serviços/vulnerabilidades filhos.</li>
                         </ul>
                     </li>
                 </ul>

@@ -87,7 +87,7 @@ const translations = {
         // Footer
         'footer.cta_title': 'Detecte Fraquezas e <span>Proteja o que importa!</span>',
         'footer.cta_desc': 'Segurança ofensiva, engenharia de detecção e análise contínua de superfície de ataque.',
-        'footer.about': 'Hub técnico de Pesquisa de Superfície de Ataque, Engenharia de Detecção e Segurança Ofensiva.',
+        'footer.about': 'Hub técnico de Pesquisa de Superfície de Ataque, Segurança Ofensiva e Análise de Riscos Cibernéticos.',
         'footer.eco_title': 'Ecossistema',
         'footer.inst_title': 'Institucional & Legal',
         'footer.about_link': 'Sobre a DetecTI',
@@ -191,7 +191,7 @@ const translations = {
         // Footer
         'footer.cta_title': 'Detect Flaws and <span>Protect What Matters!</span>',
         'footer.cta_desc': 'Offensive security, detection engineering, and continuous attack surface analysis.',
-        'footer.about': 'Technical Research Hub for Attack Surface Management, Detection Engineering, and Offensive Security.',
+        'footer.about': 'Technical Research Hub for Attack Surface Management, Offensive Security and Cyber Risk Analysis.',
         'footer.eco_title': 'Ecosystem',
         'footer.inst_title': 'Institutional & Legal',
         'footer.about_link': 'About DetecTI',

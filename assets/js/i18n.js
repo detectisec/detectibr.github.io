@@ -94,7 +94,7 @@ const translations = {
         'footer.privacy': 'Política de Privacidade',
         'footer.terms': 'Termos de Uso',
         'footer.opensource': 'Projetos Open Source',
-        'footer.copyright': '© 2026 DetecTI Security. Todos os direitos reservados. Hub Técnico de Segurança Ofensiva & Engenharia de Detecção.',
+        'footer.copyright': '© 2026 DetecTI Security. Todos os direitos reservados. Hub Técnico de Segurança Ofensiva & Análise de Riscos Cibernéticos.',
 
         // Blog
         'blog.subtitle': 'BLOG & LABORATÓRIO',
@@ -198,7 +198,7 @@ const translations = {
         'footer.privacy': 'Privacy Policy',
         'footer.terms': 'Terms of Use',
         'footer.opensource': 'Open Source Projects',
-        'footer.copyright': '© 2026 DetecTI Security. All rights reserved. Technical Hub for Offensive Security & Detection Engineering.',
+        'footer.copyright': '© 2026 DetecTI Security. All rights reserved. Technical Hub for Offensive Security & Cyber Risk Analysis.',
 
         // Blog
         'blog.subtitle': 'BLOG & LABORATORY',

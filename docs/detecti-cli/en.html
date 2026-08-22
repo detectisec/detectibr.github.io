@@ -1430,42 +1430,42 @@ flowchart TD
     classDef correlate fill:#143024,stroke:#10b981,stroke-width:2px,color:#fff
     classDef output fill:#2d2d2d,stroke:#f59e0b,stroke-width:2px,color:#fff
 
-    TARGET([🎯 Target Input: IP / CIDR / Domain / CVE / Query]):::input --> CLASSIFY[Target Classification & Validation]:::input
+    TARGET([Target Input: IP / CIDR / Domain / CVE / Query]):::input --> CLASSIFY[Target Classification & Validation]:::input
 
     subgraph Stage1 [Stage 1: Primary Reconnaissance & Target Discovery]
-        CLASSIFY -->|Domain / Email| CRTSH[📜 crt.sh: Certificate Transparency]:::recon
-        CLASSIFY -->|Domain / IP / Email| WHOIS[🏢 Reverse WHOIS: Hybrid WhoisFreaks]:::recon
-        CLASSIFY -->|Domain / IP / CIDR / Query| SHODAN[🛰️ Shodan: Host Profile & Banners]:::recon
-        CLASSIFY -->|Direct IP / Fallback| CENSYS_DIRECT[🌐 Censys: Direct IP Profile]:::recon
+        CLASSIFY -->|Domain / Email| CRTSH[crt.sh: Certificate Transparency]:::recon
+        CLASSIFY -->|Domain / IP / Email| WHOIS[Reverse WHOIS: Hybrid WhoisFreaks]:::recon
+        CLASSIFY -->|Domain / IP / CIDR / Query| SHODAN[Shodan: Host Profile & Banners]:::recon
+        CLASSIFY -->|Direct IP / Fallback| CENSYS_DIRECT[Censys: Direct IP Profile]:::recon
     end
 
     subgraph Stage1_5 [Stage 1.5: Complementary Censys Host Enrichment]
         CRTSH & WHOIS & SHODAN -->|Discovered Host IPs| IP_EXTRACT[Unique IP Extraction]:::recon
-        IP_EXTRACT -->|Parallel Host Dossiers| CENSYS_ENRICH[🌐 Censys API v3: Ports, TLS & CVEs]:::recon
+        IP_EXTRACT -->|Parallel Host Dossiers| CENSYS_ENRICH[Censys API v3: Ports, TLS & CVEs]:::recon
     end
 
     subgraph Stage2 [Stage 2: Threat Intelligence & Vulnerability Scoring]
         SHODAN & CENSYS_DIRECT & CENSYS_ENRICH -->|Aggregated CVEs| CVE_AGG[CVE Aggregator & Deduplication]:::enrich
-        CVE_AGG --> NVD[🛡️ NVD 2.0: CVSS Base + Vector + CWE Name]:::intel
-        CVE_AGG --> EPSS[📈 FIRST EPSS: Exploit Probability %]:::intel
-        CVE_AGG --> CISA[🚨 CISA KEV: Ransomware & In-the-Wild Flag]:::intel
+        CVE_AGG --> NVD[NVD 2.0: CVSS Base + Vector + CWE Name]:::intel
+        CVE_AGG --> EPSS[FIRST EPSS: Exploit Probability %]:::intel
+        CVE_AGG --> CISA[CISA KEV: Ransomware & In-the-Wild Flag]:::intel
     end
 
     subgraph Stage3 [Stage 3: Weaponization & PoC Hunting]
-        CVE_AGG --> XDB[💣 ExploitDB: Verified Exploits & Shellcodes]:::intel
-        CVE_AGG --> GITHUB[🐙 GitHub PoC Hunter: Exploit Repositories]:::intel
+        CVE_AGG --> XDB[ExploitDB: Verified Exploits & Shellcodes]:::intel
+        CVE_AGG --> GITHUB[GitHub PoC Hunter: Exploit Repositories]:::intel
     end
 
     subgraph Stage4 [Stage 4: Unified Graph Modeling & Correlation]
-        NVD & EPSS & CISA & XDB & GITHUB --> CORRELATION[🔗 Unified EASM Graph Correlation]:::correlate
+        NVD & EPSS & CISA & XDB & GITHUB --> CORRELATION[Unified EASM Graph Correlation]:::correlate
         CRTSH & WHOIS & SHODAN & CENSYS_ENRICH --> CORRELATION
     end
 
     subgraph Stage5 [Stage 5: Multi-Channel Output]
-        CORRELATION --> DB[(💾 SQLite Persistence ./data/dbs/)]:::output
-        CORRELATION --> CLI[📊 Rich Terminal: Tables & Risk Badges]:::output
-        CORRELATION --> REPORT[📄 JSON, Markdown & HTML Reports]:::output
-        CORRELATION --> WEB[🌐 DetecTI Hound Web Dashboard]:::output
+        CORRELATION --> DB[(SQLite Persistence ./data/dbs/)]:::output
+        CORRELATION --> CLI[Rich Terminal: Tables & Risk Badges]:::output
+        CORRELATION --> REPORT[JSON, Markdown & HTML Reports]:::output
+        CORRELATION --> WEB[DetecTI Hound Web Dashboard]:::output
     end
                     </pre>
                 </div>
@@ -1776,7 +1776,7 @@ GITHUB_TOKEN="your_github_token_here"</code></pre>
                                     <div class="geom-shape shape-cluster-services" title="Dashed Hexagon">+15</div>
                                 </td>
                                 <td><span style="color:#d35400; font-weight:bold;">Burnt Orange (#d35400)</span></td>
-                                <td>Interactive collapsible node for high-density hosts with &gt;15 open ports.</td>
+                                <td>Interactive collapsible node for hosts with multiple services (automatic for &gt;15 ports or on-demand via right-click context menu).</td>
                             </tr>
                             <tr>
                                 <td><strong>Vulnerability Cluster (+N)</strong></td>
@@ -1784,11 +1784,51 @@ GITHUB_TOKEN="your_github_token_here"</code></pre>
                                     <div class="geom-shape shape-cluster-vulns" title="Dashed Diamond"><span>+30</span></div>
                                 </td>
                                 <td><span style="color:#c0392b; font-weight:bold;">Dark Crimson (#c0392b)</span></td>
-                                <td>Interactive collapsible cluster for services with high-volume CVE counts.</td>
+                                <td>Interactive collapsible cluster for vulnerabilities on services or directly on IP addresses (automatic or on-demand via right-click).</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+
+                <h3 class="sub-heading" id="webgui-filters"><i class="fa-solid fa-gamepad"></i> Interactive Navigation, Controls & Context Menu</h3>
+                <ul style="margin-left: 20px; line-height: 1.7;">
+                    <li><strong>Left-Click (Drag):</strong> Continuous smooth panning across the attack surface graph.</li>
+                    <li><strong>Left-Click (Node):</strong> Single asset selection and opens the <strong>Lateral Asset Inspector</strong>.</li>
+                    <li><strong>Ctrl + Left-Click (or Cmd on macOS):</strong> Additive sequential multi-selection to select multiple target nodes simultaneously.</li>
+                    <li><strong>Right-Click (Node):</strong> Opens the <strong>Custom Context Menu</strong> with quick actions:
+                        <ul style="margin-top: 4px;">
+                            <li><i class="fa-solid fa-compress text-cyan"></i> <strong>Collapse / Uncollapse Services:</strong> Group or expand services under the IP host.</li>
+                            <li><i class="fa-solid fa-compress text-cyan"></i> <strong>Collapse / Uncollapse Vulnerabilities:</strong> Group or expand direct IP or service vulnerabilities.</li>
+                            <li><i class="fa-solid fa-info-circle text-cyan"></i> <strong>Inspect Details:</strong> Open the detailed technical asset drawer.</li>
+                            <li><i class="fa-solid fa-crosshairs text-cyan"></i> <strong>Focus Node:</strong> Instantly zoom and center directly onto the target asset.</li>
+                            <li><i class="fa-solid fa-copy text-cyan"></i> <strong>Copy Domain / Subdomain / IP / CVE:</strong> Copy the exact asset identifier to the clipboard.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Right-Click (Drag on Canvas):</strong> Box Area Selection to group and reposition blocks of nodes together.</li>
+                    <li><strong>Layout Algorithms:</strong>
+                        <ul style="margin-top: 4px;">
+                            <li><i class="fa-solid fa-sitemap text-cyan"></i> <code>Hierarchical Top-Down (Default)</code>: Structured top-down tree topology with compact adaptive spacing.</li>
+                            <li><i class="fa-solid fa-atom text-cyan"></i> <code>Force-Directed</code>: Organic physics simulation with smooth spring transitions and calibrated repulsion.</li>
+                            <li><i class="fa-solid fa-bullseye text-cyan"></i> <code>Concentric</code> & <i class="fa-solid fa-table-cells text-cyan"></i> <code>Grid</code>: Concentric orbital rings and uniform asset matrices.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Quick Risk Filters:</strong>
+                        <ul style="margin-top: 4px;">
+                            <li><i class="fa-solid fa-check text-cyan"></i> <strong>CISA KEV Only:</strong> Restricts graph to active in-the-wild exploited vulnerabilities.</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> <strong>High EPSS (&gt; 50%):</strong> Prioritizes imminent weaponization probabilities.</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> <strong>Public Exploits / PoCs:</strong> Filters for weaponized exploits in ExploitDB and GitHub.</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> <strong>Services Only / Vulnerable Services Only:</strong> Isolates active services layer and vulnerable hosts.</li>
+                            <li><i class="fa-solid fa-check text-cyan"></i> <strong>Search with Downstream Inheritance:</strong> Search by IP, domain, or port preserving ancestry to target root and child services/CVEs.</li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <h3 class="sub-heading" id="webgui-inspector"><i class="fa-solid fa-magnifying-glass-chart"></i> Lateral Asset Inspector</h3>
+                <p>
+                    Left-clicking any node on the graph opens the <strong>Asset Inspector</strong> drawer displaying deep technical metadata: 
+                    CVSS v3.1 vectors, associated CWE taxonomy, FIRST EPSS probability percentage and percentile, CISA KEV catalog status, 
+                    service banners, and direct links to verified weaponization proofs.
+                </p>
             </section>
 
             <!-- SECTION 7: THREAT INTEL -->

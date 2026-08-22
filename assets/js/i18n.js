@@ -18,7 +18,7 @@ const translations = {
         'nav.back_to_blog': 'Voltar para o blog',
 
         // Hero
-        'hero.badge': '<i class="fa-solid fa-shield-halved"></i> Hub de Segurança Ofensiva & Detecção',
+        'hero.badge': '<i class="fa-solid fa-shield-halved"></i> Hub de Segurança Ofensiva & Análise de Riscos Cibernéticos',
         'hero.title': 'Segurança Ofensiva & Análise de Riscos',
         'hero.desc': 'Usamos a perspectiva e a engenharia do adversário para ajudar organizações e profissionais a mapear, expor e neutralizar vetores de ataque antes de sua exploração.',
         'hero.btn_ecosystem': 'Conheça Nossas Soluções',
@@ -122,7 +122,7 @@ const translations = {
         'nav.back_to_blog': 'Back to Blog',
 
         // Hero
-        'hero.badge': '<i class="fa-solid fa-shield-halved"></i> Offensive Security & Detection Hub',
+        'hero.badge': '<i class="fa-solid fa-shield-halved"></i> Offensive Security & Cyber Risk Analysis Hub',
         'hero.title': 'Offensive Security & Risk Analysis',
         'hero.desc': 'We leverage the adversary perspective and engineering to help organizations and professionals map, expose, and neutralize attack vectors before exploitation.',
         'hero.btn_ecosystem': 'Explore Our Solutions',
